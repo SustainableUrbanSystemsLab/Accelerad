@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <NoWarn>NU1701</NoWarn>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grasshopper" Version="8.16.25042.13001" />
+    <PackageReference Include="RhinoCommon" Version="8.16.25042.13001" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+  </ItemGroup>
+
+  <Target Name="CreateGhLink" AfterTargets="Build">
+    <PropertyGroup>
+      <GhLibPath>$(HOME)/Library/Application Support/McNeel/Rhinoceros/8.0/Plug-ins/Grasshopper (b45a29b1-4343-4035-989e-044e8580d9cf)/Libraries</GhLibPath>
+      <GhLinkFile>$(GhLibPath)/Accelerad.Daylight.ghlink</GhLinkFile>
+    </PropertyGroup>
+    <Exec Command="echo &quot;$(TargetDir)&quot; &gt; &quot;$(GhLinkFile)&quot;" Condition="'$(OS)' == 'Unix' and Exists('$(GhLibPath)')" />
+    <Message Text="Created .ghlink at $(GhLinkFile)" Importance="high" Condition="'$(OS)' == 'Unix' and Exists('$(GhLibPath)')" />
+    <Message Text="Grasshopper Libraries folder not found at $(GhLibPath). Skipping .ghlink creation." Importance="high" Condition="'$(OS)' == 'Unix' and !Exists('$(GhLibPath)')" />
+  </Target>
+
+  <Target Name="RenameToGha" AfterTargets="Build">
+    <Copy SourceFiles="$(TargetDir)$(TargetName).dll" DestinationFiles="$(TargetDir)$(TargetName).gha" />
+    <Message Text="Created .gha file: $(TargetDir)$(TargetName).gha" Importance="high" />
+  </Target>
+
+</Project>

@@ -14,7 +14,11 @@ static const char	RCSid[] = "$Id: renderopts.c,v 2.18 2016/03/21 19:06:08 greg E
 #include  "pmapopt.h"
 
 #ifdef ACCELERAD
+#ifdef ACCELERAD_NO_OPTIX
+unsigned int use_optix = 0u;			/* GPU code not built in this configuration */
+#else
 unsigned int use_optix = 1u;			/* Flag to use OptiX for ray tracing (-g) */
+#endif
 #ifdef RTX
 #ifdef ACCELERAD_DEBUG
 int optix_verbosity = 1;				/* Verbosity level for OptiX callbacks (-gv) */
